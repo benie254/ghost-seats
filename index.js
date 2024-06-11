@@ -1,3 +1,5 @@
+let allSeats = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+
 let preferredSeats = {
   Earthenware: [1, 12, 2, 11, 3],
   Waterfall: [4, 3, 5, 2, 6],
@@ -31,3 +33,10 @@ const indexToRemove = clanSeats.indexOf(
 );
 const removedSeat = clanSeats.splice(indexToRemove, 1)[0]; // Remove the seat from the clan's seat array
 allSeats = allSeats.filter((seat) => seat !== removedSeat); // Remove the seat from allSeats
+
+// Rotate the clan's seat array so that the next seat becomes the first one
+const rotatedSeats = [
+  ...clanSeats.slice(indexToRemove),
+  ...clanSeats.slice(0, indexToRemove),
+];
+preferredSeats[clan] = rotatedSeats;
