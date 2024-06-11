@@ -7,36 +7,45 @@ let preferredSeats = {
   Windowsill: [10, 9, 11, 8, 12],
 };
 
-// Find a ghost's clan based on its name
-function findClan(name) {
-  const ghostClans = [
-    { clan: "Earthenware", value: "QUTHCRDMZ" },
-    { clan: "Waterfall", value: "WEVOXING" },
-    { clan: "Fireplace", value: "JFABKPLY" },
-    { clan: "Windowsill", value: "SSSSSSSSS" },
+function ghostSeats(ghostName) {
+  // Find a ghost's clan based on its name
+  function findClan(name) {
+    const ghostClans = [
+      { clan: "Earthenware", value: "QUTHCRDMZ" },
+      { clan: "Waterfall", value: "WEVOXING" },
+      { clan: "Fireplace", value: "JFABKPLY" },
+      { clan: "Windowsill", value: "SSSSSSSSS" },
+    ];
+    const firstLetter = name[0].toUpperCase();
+
+    return ghostClans.find((obj) =>
+      obj.value.toUpperCase().includes(firstLetter)
+    )?.clan;
+  }
+
+  const clan = findClan(ghostName);
+  if (!clan) return;
+
+  const clanSeats = preferredSeats[clan];
+  if (!clanSeats || clanSeats.length === 0) return;
+
+  // Determine the seat to remove (occupied seat)
+  const indexToRemove = clanSeats.indexOf(
+    clanSeats.find((seat) => allSeats.includes(seat))
+  );
+  const removedSeat = clanSeats.splice(indexToRemove, 1)[0]; // Remove the seat from the clan's seat array
+  allSeats = allSeats.filter((seat) => seat !== removedSeat); // Remove the seat from allSeats
+
+  // Rotate the clan's seat array so that the next seat becomes the first one
+  const rotatedSeats = [
+    ...clanSeats.slice(indexToRemove),
+    ...clanSeats.slice(0, indexToRemove),
   ];
-  const firstLetter = name[0].toUpperCase();
+  preferredSeats[clan] = rotatedSeats;
 
-  return ghostClans.find((obj) => obj.value.toUpperCase().includes(firstLetter))
-    ?.clan;
+  return {
+    remainingSeats: allSeats,
+    remainingPreferredSeats: preferredSeats,
+    ghostSeatedAt: removedSeat,
+  };
 }
-
-const clan = findClan(ghostName);
-if (!clan) return;
-
-const clanSeats = preferredSeats[clan];
-if (!clanSeats || clanSeats.length === 0) return;
-
-// Determine the seat to remove (occupied seat)
-const indexToRemove = clanSeats.indexOf(
-  clanSeats.find((seat) => allSeats.includes(seat))
-);
-const removedSeat = clanSeats.splice(indexToRemove, 1)[0]; // Remove the seat from the clan's seat array
-allSeats = allSeats.filter((seat) => seat !== removedSeat); // Remove the seat from allSeats
-
-// Rotate the clan's seat array so that the next seat becomes the first one
-const rotatedSeats = [
-  ...clanSeats.slice(indexToRemove),
-  ...clanSeats.slice(0, indexToRemove),
-];
-preferredSeats[clan] = rotatedSeats;
