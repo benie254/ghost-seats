@@ -49,3 +49,23 @@ function ghostSeats(ghostName) {
     ghostSeatedAt: removedSeat,
   };
 }
+
+ghostNames = ["Ali", "Saba", "Wino", "Utha", "Baba", "Suna"];
+
+function processGhostNames(ghostNames, callback) {
+  const resultsContainer = document.getElementById("results-container");
+
+  ghostNames.forEach((ghostName) => {
+    const result = callback(ghostName);
+    if (result) {
+      const resultH1Element = document.createElement("h1");
+      resultH1Element.textContent = `Ghost: ${ghostName}`
+      const resultH4Element = document.createElement("h4");
+      resultH4Element.textContent = `Seated at: ${result.ghostSeatedAt}. Remaining Seats: ${result.remainingSeats}`;
+      resultsContainer.appendChild(resultH1Element);
+      resultsContainer.appendChild(resultH4Element);
+    }
+  });
+}
+
+processGhostNames(ghostNames, ghostSeats);
